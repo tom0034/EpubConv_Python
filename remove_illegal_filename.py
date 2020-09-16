@@ -1,8 +1,9 @@
 import os
 import sys
+import re
 
 
-def shorten_filename(old_file_path, pre_path):
+def remove_illegal(old_file_path, pre_path):
 
     clean_file_path = old_file_path[len(pre_path) :]
     if os.name == "nt":
@@ -14,9 +15,13 @@ def shorten_filename(old_file_path, pre_path):
             clean_file_path[1:] if clean_file_path[0] is "/" else clean_file_path
         )
 
-    if len(clean_file_path) < 18:
-        return
-    new_filename = clean_file_path[:18]
+    ## remove extension
+    clean_file_path = os.path.splitext(clean_file_path)[0]
+
+    ## regex to rename
+    new_filename = re.sub("[^\w\d\s\.@-]", "", clean_file_path)
+    new_filename = re.sub("\s+", "", new_filename)
+    new_filename.strip()
 
     if os.name == "nt":
         new_file_path = pre_path + "\\" + new_filename + ".epub"
@@ -52,5 +57,5 @@ if __name__ == "__main__":
     ]
 
     for file in files:
-        shorten_filename(file, sys.argv[1])
+        remove_illegal(file, sys.argv[1])
 
