@@ -21,6 +21,7 @@ def remove_illegal(old_file_path, pre_path):
     ## regex to rename
     new_filename = re.sub("[^\w\d\s\.@-]", "", clean_file_path)
     new_filename = re.sub("\s+", "", new_filename)
+    # new_filename = re.sub(r"[\/:\"*?<>|]+", "", new_filename)
     new_filename.strip()
 
     if os.name == "nt":

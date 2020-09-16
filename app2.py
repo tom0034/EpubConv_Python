@@ -1,7 +1,8 @@
 import asyncio
 import ctypes
 import json
-import mimetypes
+
+# import mimetypes
 import os
 import re
 import shutil
@@ -9,11 +10,12 @@ import sys
 import time
 import zipfile
 from configparser import ConfigParser
+import magic
 
 import cssutils
 from strtobool import strtobool
 
-from modules.console import Console
+# from modules.console import Console
 from modules.logger import Logger
 from modules.opencc import OpenCC
 from modules.utils.error import (
@@ -509,11 +511,11 @@ class EPubConv:
         Raises:
             FileTypeError: 檔案格式不符例外處理
         """
+        mime = magic.Magic(mime=True)
         self.logger.debug(
-            "check",
-            f"file: {file_path}, file mimetypes: {mimetypes.MimeTypes().guess_type(file_path)}",
+            "check", f"file: {file_path}, file mimetypes: {mime.from_file(file_path)}",
         )
-        if not mimetypes.MimeTypes().guess_type(file_path)[0] == "application/epub+zip":
+        if not mime.from_file(file_path) == "application/epub+zip":
             raise FileTypeError("File is not a epub file")
 
 
